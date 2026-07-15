@@ -1,0 +1,137 @@
+<template>
+    <lightning-card title="Booking Confirmation" 
+                    icon-name="standard:approval">
+        <div class="slds-p-around_medium">
+
+            <!-- Flight Summary Section -->
+            <div class="slds-box slds-m-bottom_medium">
+                <h3 class="slds-text-heading_small 
+                           slds-m-bottom_small">
+                    ✈ Flight Details
+                </h3>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <p><strong>Airline:</strong> 
+                            {selectedOffer.airline}
+                        </p>
+                        <p><strong>Flight:</strong> 
+                            {selectedOffer.flightNumber}
+                        </p>
+                        <p><strong>Route:</strong> 
+                            {selectedOffer.origin} → 
+                            {selectedOffer.destination}
+                        </p>
+                    </div>
+                    <div class="slds-col">
+                        <p><strong>Departure:</strong> 
+                            {formattedDeparture}
+                        </p>
+                        <p><strong>Arrival:</strong> 
+                            {formattedArrival}
+                        </p>
+                        <p><strong>Duration:</strong> 
+                            {duration}
+                        </p>
+                        <p><strong>Class:</strong> 
+                            {selectedOffer.cabinClass}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Passengers Summary -->
+            <div class="slds-box slds-m-bottom_medium">
+                <h3 class="slds-text-heading_small 
+                           slds-m-bottom_small">
+                    👥 Passengers
+                </h3>
+                <template for:each={passengers} 
+                          for:item="passenger">
+                    <div key={passenger.key} 
+                         class="slds-m-bottom_small">
+                        <p>
+                            <strong>
+                                {passenger.displayIndex}.
+                            </strong>
+                            {passenger.firstName} 
+                            {passenger.lastName}
+                            ({passenger.passengerType})
+                        </p>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Price Breakdown -->
+            <div class="slds-box slds-m-bottom_medium">
+                <h3 class="slds-text-heading_small 
+                           slds-m-bottom_small">
+                    💰 Price Breakdown
+                </h3>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <p>Base Fare (per person):</p>
+                        <p>Number of Passengers:</p>
+                        <p>Taxes &amp; Fees:</p>
+                        <p><strong>Total Amount:</strong></p>
+                    </div>
+                    <div class="slds-col 
+                                slds-text-align_right">
+                        <p>₹{selectedOffer.price}</p>
+                        <p>{passengers.length}</p>
+                        <p>₹0</p>
+                        <p>
+                            <strong>
+                                ₹{totalAmount}
+                            </strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terms Checkbox -->
+            <div class="slds-m-bottom_medium">
+                <lightning-input
+                    type="checkbox"
+                    label="I agree to the terms and 
+                           conditions of booking"
+                    checked={termsAccepted}
+                    onchange={handleTermsChange}>
+                </lightning-input>
+            </div>
+
+            <!-- Error Message -->
+            <template if:true={bookingError}>
+                <div class="slds-m-bottom_medium">
+                    <p class="slds-text-color_error">
+                        {bookingError}
+                    </p>
+                </div>
+            </template>
+
+            <!-- Buttons -->
+            <div class="slds-m-top_medium">
+                <!-- Spinner during booking creation -->
+                <template if:true={isLoading}>
+                    <lightning-spinner
+                        alternative-text="Creating booking..."
+                        size="small">
+                    </lightning-spinner>
+                </template>
+
+                <lightning-button
+                    label="Confirm Booking"
+                    variant="brand"
+                    onclick={handleConfirmBooking}
+                    disabled={isConfirmDisabled}>
+                </lightning-button>
+                <lightning-button
+                    label="← Back"
+                    class="slds-m-left_small"
+                    onclick={handleBack}
+                    disabled={isLoading}>
+                </lightning-button>
+            </div>
+
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,74 @@
+<template>
+    <lightning-card title="My Bookings" 
+                    icon-name="standard:orders">
+        <div class="slds-p-around_medium">
+
+            <!-- Filter Tabs -->
+            <lightning-tabset class="slds-m-bottom_medium">
+                <lightning-tab 
+                    label="All Bookings"
+                    onactive={handleTabAll}>
+                </lightning-tab>
+                <lightning-tab 
+                    label="Upcoming"
+                    onactive={handleTabUpcoming}>
+                </lightning-tab>
+                <lightning-tab 
+                    label="Past"
+                    onactive={handleTabPast}>
+                </lightning-tab>
+                <lightning-tab 
+                    label="Cancelled"
+                    onactive={handleTabCancelled}>
+                </lightning-tab>
+            </lightning-tabset>
+
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <lightning-spinner
+                    alternative-text="Loading bookings..."
+                    size="medium">
+                </lightning-spinner>
+            </template>
+
+            <!-- Error Message -->
+            <template if:true={error}>
+                <p class="slds-text-color_error">
+                    Error: {error}
+                </p>
+            </template>
+
+            <!-- Total count for debugging -->
+            <p class="slds-m-bottom_small">
+                Total bookings: {filteredBookings.length}
+            </p>
+
+            <!-- Bookings Data Table -->
+            <template if:true={hasBookings}>
+                <lightning-datatable
+                    key-field="Id"
+                    data={filteredBookings}
+                    columns={columns}
+                    onrowaction={handleRowAction}
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </template>
+
+            <!-- No Bookings Message -->
+            <template if:false={hasBookings}>
+                <template if:false={isLoading}>
+                    <div class="slds-box slds-text-align_center">
+                        <p>No bookings found.</p>
+                        <lightning-button
+                            label="Search Flights"
+                            variant="brand"
+                            class="slds-m-top_small"
+                            onclick={handleSearchFlight}>
+                        </lightning-button>
+                    </div>
+                </template>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

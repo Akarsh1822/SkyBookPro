@@ -1,0 +1,103 @@
+<template>
+    <div class="skybook-container">
+
+        <!-- Header -->
+        <div class="skybook-header slds-box 
+                    slds-theme_shade 
+                    slds-m-bottom_medium 
+                    slds-p-around_medium">
+            <h1 class="slds-text-heading_large">
+                ✈ SkyBook Pro
+            </h1>
+            <p class="slds-text-body_regular">
+                Your complete flight booking solution
+            </p>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="slds-m-bottom_medium slds-p-horizontal_medium">
+            <lightning-button
+                label="✈ Search Flights"
+                variant="brand"
+                onclick={handleSearchAnother}
+                class="slds-m-right_small">
+            </lightning-button>
+            <lightning-button
+                label="📋 My Bookings"
+                variant="neutral"
+                onclick={handleGoToDashboard}>
+            </lightning-button>
+        </div>
+
+        <!-- Step 1: Flight Search -->
+        <template if:true={showSearch}>
+            <c-flight-search-form
+                onsearchflights={handleSearchFlights}>
+            </c-flight-search-form>
+        </template>
+
+        <!-- Step 2: Flight Results -->
+        <template if:true={showResults}>
+            <c-flight-results-list
+                flight-offers={flightOffers}
+                onofferselected={handleOfferSelected}>
+            </c-flight-results-list>
+        </template>
+
+        <!-- Step 3: Passenger Details -->
+        <template if:true={showPassengerForm}>
+            <c-passenger-details-form
+                passenger-count={passengerCount}
+                onpassengersconfirmed={handlePassengersConfirmed}>
+            </c-passenger-details-form>
+        </template>
+
+        <!-- Step 4: Booking Confirmation -->
+        <template if:true={showConfirmation}>
+            <c-booking-confirmation
+                selected-offer={selectedOffer}
+                passengers={passengers}
+                contact-id={contactId}
+                onbookingcreated={handleBookingCreated}>
+            </c-booking-confirmation>
+        </template>
+
+        <!-- Step 5: Booking Success -->
+        <template if:true={showSuccess}>
+            <c-booking-success
+                booking={createdBooking}
+                ongotodashboard={handleGoToDashboard}
+                onsearchanother={handleSearchAnother}>
+            </c-booking-success>
+        </template>
+
+        <!-- My Bookings Dashboard -->
+        <template if:true={showDashboard}>
+            <c-my-bookings-dashboard
+                onsearchflight={handleSearchAnother}
+                onviewbookingdetail={handleViewBookingDetail}
+                oncancelbooking={handleCancelBooking}>
+            </c-my-bookings-dashboard>
+        </template>
+
+        <!-- Booking Detail View -->
+        <template if:true={showDetailView}>
+            <c-booking-detail-view
+                booking-id={selectedBookingId}
+                ongoback={handleGoBackToDashboard}
+                oncancelbooking={handleCancelBooking}>
+            </c-booking-detail-view>
+        </template>
+
+        <!-- Cancellation Modal -->
+        <template if:true={showCancellationModal}>
+            <c-cancellation-modal
+                booking={selectedBooking}
+                is-open={showCancellationModal}
+                onclosemodal={handleCloseModal}
+                onbookingcancelled={handleBookingCancelled}>
+            </c-cancellation-modal>
+        </template>
+
+    </div>
+</template>

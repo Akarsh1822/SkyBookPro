@@ -1,0 +1,16 @@
+<template>
+    <lightning-card title="Agent Dashboard">
+        <template if:true={bookings}>
+            <template for:each={bookings} for:item="booking">
+                <div key={booking.Id} class="slds-box slds-m-around_small">
+                    <p><b>Name:</b> {booking.Name}</p>
+                    <p><b>Status:</b> {booking.Booking_Status__c}</p>
+                </div>
+            </template>
+        </template>
+
+        <template if:false={bookings}>
+            <p class="slds-p-around_small">No bookings found</p>
+        </template>
+    </lightning-card>
+</template>

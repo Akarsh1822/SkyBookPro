@@ -1,0 +1,87 @@
+<template>
+    <lightning-card title="Booking Confirmed! 🎉" 
+                    icon-name="standard:task2">
+        <div class="slds-p-around_medium 
+                    slds-text-align_center">
+
+            <!-- Success Icon -->
+            <div class="slds-m-bottom_medium">
+                <lightning-icon
+                    icon-name="action:approval"
+                    size="large"
+                    alternative-text="Success">
+                </lightning-icon>
+            </div>
+
+            <!-- PNR / Booking Reference -->
+            <div class="slds-box slds-m-bottom_medium">
+                <p class="slds-text-body_small 
+                          slds-text-color_weak">
+                    Your Booking Reference (PNR)
+                </p>
+                <p class="slds-text-heading_large 
+                          slds-text-color_success">
+                    {booking.Name}
+                </p>
+            </div>
+
+            <!-- Booking Summary -->
+            <div class="slds-box slds-m-bottom_medium 
+                        slds-text-align_left">
+                <h3 class="slds-text-heading_small 
+                           slds-m-bottom_small">
+                    Booking Summary
+                </h3>
+                <p>
+                    <strong>Status:</strong> 
+                    {booking.Booking_Status__c}
+                </p>
+                <p>
+                    <strong>Seat Class:</strong> 
+                    {booking.Seat_Class__c}
+                </p>
+                <p>
+                    <strong>Number of Seats:</strong> 
+                    {booking.Number_of_Seats__c}
+                </p>
+                <p>
+                    <strong>Total Amount:</strong> 
+                    ₹{booking.Total_Amount__c}
+                </p>
+                <p>
+                    <strong>Booking Date:</strong> 
+                    {booking.Booking_Date__c}
+                </p>
+            </div>
+
+            <!-- 3 Action Buttons as per BRD -->
+            <div class="slds-m-top_medium">
+
+                <!-- Button 1: View Booking -->
+                <lightning-button
+                    label="View Booking"
+                    variant="brand"
+                    onclick={handleViewBooking}
+                    class="slds-m-right_small">
+                </lightning-button>
+
+                <!-- Button 2: Search Another Flight -->
+                <lightning-button
+                    label="Search Another Flight"
+                    variant="neutral"
+                    onclick={handleSearchAnother}
+                    class="slds-m-right_small">
+                </lightning-button>
+
+                <!-- Button 3: Go to Dashboard -->
+                <lightning-button
+                    label="Go to Dashboard"
+                    variant="neutral"
+                    onclick={handleGoToDashboard}>
+                </lightning-button>
+
+            </div>
+
+        </div>
+    </lightning-card>
+</template>

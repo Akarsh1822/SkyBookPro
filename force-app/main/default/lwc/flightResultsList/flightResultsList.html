@@ -1,0 +1,72 @@
+<template>
+    <lightning-card title="Available Flights" icon-name="standard:travel_mode">
+        <div class="slds-p-around_medium">
+
+            <!-- Sort and Filter Controls -->
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+
+                <!-- Sort by -->
+                <div class="slds-col">
+                    <lightning-combobox
+                        label="Sort By"
+                        value={sortBy}
+                        options={sortOptions}
+                        onchange={handleSortChange}>
+                    </lightning-combobox>
+                </div>
+
+                <!-- Filter by Airline -->
+                <div class="slds-col">
+                    <lightning-input
+                        type="text"
+                        label="Filter by Airline"
+                        placeholder="e.g. IndiGo"
+                        value={airlineFilter}
+                        onchange={handleAirlineFilterChange}>
+                    </lightning-input>
+                </div>
+
+                <!-- Filter by Max Price -->
+                <div class="slds-col">
+                    <lightning-input
+                        type="number"
+                        label="Max Price (₹)"
+                        value={maxPrice}
+                        onchange={handleMaxPriceChange}>
+                    </lightning-input>
+                </div>
+            </div>
+
+            <!-- Results Count -->
+            <p class="slds-m-bottom_small slds-text-body_regular">
+                {filteredOffers.length} flights found
+            </p>
+
+            <!-- No Results Message -->
+            <template if:true={noResults}>
+                <div class="slds-box slds-text-align_center">
+                    <p>No flights match your filters. Try adjusting your search.</p>
+                </div>
+            </template>
+
+            <!-- Flight Cards List -->
+            <!-- for:each loops through each offer and creates one card -->
+            <template for:each={filteredOffers} for:item="offer">
+                <c-flight-result-card
+                    key={offer.offerId}
+                    offer={offer}
+                    onofferselected={handleOfferSelected}>
+                </c-flight-result-card>
+            </template>
+
+            <!-- Back to Search button -->
+            <div class="slds-m-top_medium">
+                <lightning-button
+                    label="← Back to Search"
+                    onclick={handleBackToSearch}>
+                </lightning-button>
+            </div>
+
+        </div>
+    </lightning-card>
+</template>

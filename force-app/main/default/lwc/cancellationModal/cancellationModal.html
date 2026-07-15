@@ -1,0 +1,112 @@
+<template>
+    <!-- Modal Backdrop -->
+    <template if:true={isOpen}>
+        <section role="dialog" 
+                 tabindex="-1" 
+                 class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+
+                <!-- Modal Header -->
+                <header class="slds-modal__header">
+                    <button class="slds-button 
+                                   slds-button_icon 
+                                   slds-modal__close 
+                                   slds-button_icon-inverse"
+                            onclick={handleClose}>
+                        <lightning-icon
+                            icon-name="utility:close"
+                            alternative-text="Close"
+                            size="small">
+                        </lightning-icon>
+                    </button>
+                    <h2 class="slds-modal__title">
+                        Cancel Booking
+                    </h2>
+                </header>
+
+                <!-- Modal Body -->
+                <div class="slds-modal__content 
+                            slds-p-around_medium">
+
+                    <!-- Booking Summary -->
+                    <div class="slds-box slds-m-bottom_medium">
+                        <p>
+                            <strong>Booking Reference:</strong>
+                            {booking.Name}
+                        </p>
+                        <p>
+                            <strong>Status:</strong>
+                            {booking.Booking_Status__c}
+                        </p>
+                        <p>
+                            <strong>Total Amount:</strong>
+                            ₹{booking.Total_Amount__c}
+                        </p>
+                    </div>
+
+                    <!-- Refund Policy Notice -->
+                    <div class="slds-box 
+                                slds-theme_warning 
+                                slds-m-bottom_medium">
+                        <p>
+                            <strong>⚠ Refund Policy:</strong>
+                        </p>
+                        <p>
+                            Cancellations are processed within 
+                            5-7 business days. A cancellation 
+                            fee may apply.
+                        </p>
+                    </div>
+
+                    <!-- Cancellation Reason -->
+                    <lightning-textarea
+                        label="Cancellation Reason"
+                        placeholder="Please enter reason 
+                                     for cancellation..."
+                        value={cancellationReason}
+                        onchange={handleReasonChange}
+                        required
+                        max-length="255">
+                    </lightning-textarea>
+
+                    <!-- Error Message -->
+                    <template if:true={reasonError}>
+                        <p class="slds-text-color_error 
+                                  slds-m-top_small">
+                            {reasonError}
+                        </p>
+                    </template>
+
+                    <!-- Loading -->
+                    <template if:true={isLoading}>
+                        <lightning-spinner
+                            alternative-text="Cancelling..."
+                            size="small">
+                        </lightning-spinner>
+                    </template>
+
+                </div>
+
+                <!-- Modal Footer -->
+                <footer class="slds-modal__footer">
+                    <lightning-button
+                        label="Keep Booking"
+                        onclick={handleClose}
+                        class="slds-m-right_small">
+                    </lightning-button>
+                    <lightning-button
+                        label="Confirm Cancellation"
+                        variant="destructive"
+                        onclick={handleConfirmCancellation}
+                        disabled={isLoading}>
+                    </lightning-button>
+                </footer>
+
+            </div>
+        </section>
+
+        <!-- Backdrop -->
+        <div class="slds-backdrop slds-backdrop_open">
+        </div>
+    </template>
+</template>

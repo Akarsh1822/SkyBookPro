@@ -1,0 +1,135 @@
+<template>
+    <lightning-card title="Search Flights ✈" icon-name="standard:flight">
+        <div class="slds-p-around_medium">
+
+            <!-- Trip Type Toggle -->
+            <div class="slds-m-bottom_medium">
+                <lightning-radio-group
+                    name="tripType"
+                    label="Trip Type"
+                    options={tripTypeOptions}
+                    value={tripType}
+                    type="button"
+                    onchange={handleTripTypeChange}>
+                </lightning-radio-group>
+            </div>
+
+            <!-- Row 1: Origin and Destination -->
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col">
+                    <lightning-input
+                        type="text"
+                        label="Origin Airport (IATA Code)"
+                        placeholder="e.g. DEL"
+                        value={origin}
+                        maxlength="3"
+                        onchange={handleOriginChange}
+                        required>
+                    </lightning-input>
+                    <!-- Error message for origin -->
+                    <template if:true={originError}>
+                        <p class="slds-text-color_error">{originError}</p>
+                    </template>
+                </div>
+                <div class="slds-col">
+                    <lightning-input
+                        type="text"
+                        label="Destination Airport (IATA Code)"
+                        placeholder="e.g. BOM"
+                        value={destination}
+                        maxlength="3"
+                        onchange={handleDestinationChange}
+                        required>
+                    </lightning-input>
+                    <template if:true={destinationError}>
+                        <p class="slds-text-color_error">{destinationError}</p>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Row 2: Departure Date and Return Date -->
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col">
+                    <lightning-input
+                        type="date"
+                        label="Departure Date"
+                        value={departureDate}
+                        min={today}
+                        onchange={handleDepartureDateChange}
+                        required>
+                    </lightning-input>
+                    <template if:true={departureDateError}>
+                        <p class="slds-text-color_error">{departureDateError}</p>
+                    </template>
+                </div>
+                <!-- Return Date only shows for Round Trip -->
+                <template if:true={isRoundTrip}>
+                    <div class="slds-col">
+                        <lightning-input
+                            type="date"
+                            label="Return Date"
+                            value={returnDate}
+                            min={departureDate}
+                            onchange={handleReturnDateChange}>
+                        </lightning-input>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Row 3: Cabin Class and Adults -->
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col">
+                    <lightning-combobox
+                        label="Cabin Class"
+                        value={cabinClass}
+                        options={cabinClassOptions}
+                        onchange={handleCabinClassChange}>
+                    </lightning-combobox>
+                </div>
+                <div class="slds-col">
+                    <lightning-input
+                        type="number"
+                        label="Number of Adults"
+                        value={adults}
+                        min="1"
+                        max="9"
+                        onchange={handleAdultsChange}
+                        required>
+                    </lightning-input>
+                    <template if:true={adultsError}>
+                        <p class="slds-text-color_error">{adultsError}</p>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Search Button -->
+            <div class="slds-m-top_medium">
+                <lightning-button
+                    label="Search Flights"
+                    variant="brand"
+                    onclick={handleSearch}
+                    disabled={isLoading}>
+                </lightning-button>
+            </div>
+
+            <!-- Spinner shows during API call -->
+            <template if:true={isLoading}>
+                <lightning-spinner
+                    alternative-text="Searching flights..."
+                    size="medium">
+                </lightning-spinner>
+                <p class="slds-text-align_center slds-m-top_small">
+                    Searching available flights...
+                </p>
+            </template>
+
+            <!-- Error from API -->
+            <template if:true={searchError}>
+                <div class="slds-m-top_medium">
+                    <p class="slds-text-color_error">{searchError}</p>
+                </div>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

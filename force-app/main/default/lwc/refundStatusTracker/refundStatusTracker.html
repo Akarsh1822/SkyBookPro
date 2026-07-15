@@ -1,0 +1,39 @@
+<template>
+
+    <lightning-card title="Refund Status Tracker" icon-name="utility:money">
+
+        <div class="slds-p-around_medium">
+
+            <!-- No Data -->
+            <template if:false={hasRefund}>
+                <p class="slds-text-color_weak">
+                    No refund activity yet.
+                </p>
+            </template>
+
+            <!-- Refund Details -->
+            <template if:true={hasRefund}>
+
+                <div class="slds-box slds-theme_success">
+
+                    <p>
+                        <strong>Booking:</strong> {bookingId}
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong> {refundStatus}
+                    </p>
+
+                    <p>
+                        <strong>Processed In:</strong> 5-7 Days
+                    </p>
+
+                </div>
+
+            </template>
+
+        </div>
+
+    </lightning-card>
+
+</template>

@@ -1,0 +1,204 @@
+<template>
+    <lightning-card title="Booking Details" 
+                    icon-name="standard:news">
+        <div class="slds-p-around_medium">
+
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <lightning-spinner
+                    alternative-text="Loading..."
+                    size="medium">
+                </lightning-spinner>
+            </template>
+
+            <!-- Error Message -->
+            <template if:true={error}>
+                <p class="slds-text-color_error">
+                    {error}
+                </p>
+            </template>
+
+            <!-- Booking Details -->
+            <template if:true={booking}>
+
+                <!-- Booking Header -->
+                <div class="slds-box slds-m-bottom_medium">
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col">
+                            <p class="slds-text-heading_small">
+                                Booking Reference
+                            </p>
+                            <p class="slds-text-heading_large 
+                                      slds-text-color_success">
+                                {booking.Name}
+                            </p>
+                        </div>
+                        <div class="slds-col 
+                                    slds-text-align_right">
+                            <lightning-badge
+                                label={booking.Booking_Status__c}>
+                            </lightning-badge>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flight Information -->
+                <div class="slds-box slds-m-bottom_medium">
+                    <h3 class="slds-text-heading_small 
+                               slds-m-bottom_small">
+                        ✈ Flight Information
+                    </h3>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col">
+                            <p>
+                                <strong>Flight Number:</strong>
+                                {booking.Flight__r.Flight_Number__c}
+                            </p>
+                            <p>
+                                <strong>Airline:</strong>
+                                {booking.Flight__r.Airline_Name__c}
+                            </p>
+                            <p>
+                                <strong>Route:</strong>
+                                {booking.Flight__r.Origin_Airport__c}
+                                →
+                                {booking.Flight__r.Destination_Airport__c}
+                            </p>
+                        </div>
+                        <div class="slds-col">
+                            <p>
+                                <strong>Departure:</strong>
+                                {booking.Flight__r.Departure_DateTime__c}
+                            </p>
+                            <p>
+                                <strong>Arrival:</strong>
+                                {booking.Flight__r.Arrival_DateTime__c}
+                            </p>
+                            <p>
+                                <strong>Seat Class:</strong>
+                                {booking.Seat_Class__c}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flight Segments -->
+                <div class="slds-box slds-m-bottom_medium">
+                    <h3 class="slds-text-heading_small 
+                               slds-m-bottom_small">
+                        🛫 Flight Segments
+                    </h3>
+                    <template if:true={hasSegments}>
+                        <template 
+                            for:each={booking.Flight_Segments__r}
+                            for:item="segment">
+                            <div key={segment.Id}
+                                 class="slds-box 
+                                        slds-m-bottom_small">
+                                <p>
+                                    <strong>
+                                        Segment 
+                                        {segment.Segment_Order__c}:
+                                    </strong>
+                                    {segment.Origin__c} → 
+                                    {segment.Destination__c}
+                                </p>
+                                <p>
+                                    <strong>Flight:</strong>
+                                    {segment.Carrier_Code__c}
+                                    {segment.Flight_Number__c}
+                                </p>
+                                <p>
+                                    <strong>Departure:</strong>
+                                    {segment.Departure_DateTime__c}
+                                </p>
+                                <p>
+                                    <strong>Arrival:</strong>
+                                    {segment.Arrival_DateTime__c}
+                                </p>
+                            </div>
+                        </template>
+                    </template>
+                    <template if:false={hasSegments}>
+                        <p class="slds-text-color_weak">
+                            No segment details available.
+                        </p>
+                    </template>
+                </div>
+
+                <!-- Passengers -->
+                <div class="slds-box slds-m-bottom_medium">
+                    <h3 class="slds-text-heading_small 
+                               slds-m-bottom_small">
+                        👥 Passengers
+                    </h3>
+                    <template if:true={hasPassengers}>
+                        <template 
+                            for:each={booking.Passenger_Details__r}
+                            for:item="passenger">
+                            <div key={passenger.Id}
+                                 class="slds-m-bottom_small">
+                                <p>
+                                    <strong>
+                                        {passenger.First_Name__c}
+                                        {passenger.Last_Name__c}
+                                    </strong>
+                                    ({passenger.Passenger_Type__c})
+                                </p>
+                                <p>
+                                    Seat: {passenger.Seat_Number__c}
+                                    | Meal: 
+                                    {passenger.Meal_Preference__c}
+                                </p>
+                            </div>
+                        </template>
+                    </template>
+                    <template if:false={hasPassengers}>
+                        <p class="slds-text-color_weak">
+                            No passenger details available.
+                        </p>
+                    </template>
+                </div>
+
+                <!-- Price Summary -->
+                <div class="slds-box slds-m-bottom_medium">
+                    <h3 class="slds-text-heading_small 
+                               slds-m-bottom_small">
+                        💰 Price Summary
+                    </h3>
+                    <p>
+                        <strong>Base Fare:</strong>
+                        ₹{booking.Base_Fare__c}
+                    </p>
+                    <p>
+                        <strong>Taxes & Fees:</strong>
+                        ₹{booking.Taxes_Fees__c}
+                    </p>
+                    <p>
+                        <strong>Total Amount:</strong>
+                        ₹{booking.Total_Amount__c}
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="slds-m-top_medium">
+                    <lightning-button
+                        label="← Back to My Bookings"
+                        onclick={handleBack}
+                        class="slds-m-right_small">
+                    </lightning-button>
+
+                    <template if:true={canCancel}>
+                        <lightning-button
+                            label="Cancel Booking"
+                            variant="destructive"
+                            onclick={handleCancel}>
+                        </lightning-button>
+                    </template>
+                </div>
+
+            </template>
+
+        </div>
+    </lightning-card>
+</template>
