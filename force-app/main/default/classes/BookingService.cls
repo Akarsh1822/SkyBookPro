@@ -8,7 +8,8 @@ public class BookingService {
         String seatClass,
         String passengersJson
     ) {
-        Decimal price = offer.price != null ? offer.price : 5000;
+        Decimal price = (offer.price != null && offer.price > 0) ? 
+            offer.price : 5000;
 
         List<Flight__c> existingFlights = [
             SELECT Id FROM Flight__c 

@@ -23,7 +23,9 @@ export default class BookingConfirmation extends LightningElement {
     // price × number of passengers
     get totalAmount() {
         if (!this.selectedOffer || !this.passengers) return 0;
-        return (this.selectedOffer.price || 5000) * this.passengers.length;
+        const price = this.selectedOffer.price ? 
+            parseFloat(this.selectedOffer.price) : 5000;
+        return price * this.passengers.length;
     }
 
     // Format departure time nicely
@@ -64,6 +66,10 @@ export default class BookingConfirmation extends LightningElement {
         this.bookingError = '';
 
         try {
+            // Get actual price from offer
+            const actualPrice = this.selectedOffer.price ? 
+                parseFloat(this.selectedOffer.price) : 5000;
+
             // Imperative Apex call to BookingService.createBooking
             // Passing passengersJson so real passenger names are saved
             const booking = await createBooking({
@@ -76,7 +82,7 @@ export default class BookingConfirmation extends LightningElement {
                     departureTime: this.selectedOffer.departureTime,
                     arrivalTime: this.selectedOffer.arrivalTime,
                     airline: this.selectedOffer.airline,
-                    price: this.selectedOffer.price || 5000,
+                    price: actualPrice,
                     currency_x: this.selectedOffer.currency_x,
                     cabinClass: this.selectedOffer.cabinClass,
                     segments: this.selectedOffer.segments || []
